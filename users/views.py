@@ -1,26 +1,21 @@
 from django.shortcuts import render
+from rest_framework import permissions , generics
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer
-# from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
-# from .serializer import UserSerializer
-# from rest_framework import generics
-# from rest_framework import permissions
-# from .models import Product, Task
 
+class UserDetailView(generics.RetrieveAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
 
+    serializer_class = UserSerializer
 
-class HelloView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        message = {
-            'message': 'hello world'
-        }
-        return Response(message)
-    
+    def get_object(self):
+        return self.request.user
 
 class RegisterApiView(APIView):
     def post(self, request):
@@ -32,5 +27,4 @@ class RegisterApiView(APIView):
         return Response({
             "user": UserSerializer(user).data,
             "token": token.key
-            # "Result": "Registeration was successfull!"
         })

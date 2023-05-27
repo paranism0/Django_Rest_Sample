@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,8 +46,11 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',  # <-- And here
+        'rest_framework.authentication.SessionAuthentication'
     ],
-
+   'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAdminUser'
+   ),
 #     # 'DEFAULT_RENDERER_CLASSES': [
 #     #     'rest_framework.renderers.JSONRenderer',
 #     #     'rest_framework.renderers.BrowsableAPIRenderer'
@@ -91,12 +95,8 @@ WSGI_APPLICATION = 'core_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'shop_db',
-        'USER': 'homestead',
-        'PASSWORD': 'secret',
-        'HOST': '192.168.56.56',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
